@@ -1,9 +1,6 @@
 package reqres.rest
 
-import reqres.model.CreateDTO
-import reqres.model.GetAllDTO
-import reqres.model.GetByIdDTO
-import reqres.model.User
+import reqres.model.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -22,5 +19,11 @@ interface ReqresRest {
 
     @POST("api/users")
     suspend fun create(@Body user: User): Response<CreateDTO>
+
+    @PUT("api/users/{id}")
+    suspend fun update(@Path("id") id: Int, @Body user: User): Response<UpdateDTO>
+
+    @PATCH("api/users/{id}")
+    suspend fun upgrade(@Path("id") id: Int, @Body user: User): Response<UpdateDTO>
 
 }

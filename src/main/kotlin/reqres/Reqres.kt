@@ -24,6 +24,11 @@ object Reqres {
             last_name = "Bluth"
         )
         val create = launch(Dispatchers.IO) { create(user) }
+        user.first_name = "Janet"
+        user.avatar = "https://s3.amazonaws.com/uifaces/faces/twitter/calebogden/128.jpg"
+        val update = launch(Dispatchers.IO) { update(2, user) }
+        user.email = "pepe@mmail.com"
+        val upgrade = launch(Dispatchers.IO) { upgrade(4, user) }
     }
 
     /**
@@ -77,4 +82,37 @@ object Reqres {
             println("Error: ${response.code()}")
         }
     }
+
+    /**
+     * Actualiza un usuario.
+     * @param id id del usuario a actualizar
+     * @param user usuario con los datos a actualizar
+     */
+    private suspend fun update(id: Int, user: User) {
+        println("PUT /users/id -> update")
+        val response = restClient.update(id, user)
+        if (response.isSuccessful) {
+            println("User updated: ")
+            println("User: ${response.body()}")
+        } else {
+            println("Error: ${response.code()}")
+        }
+    }
+
+    /**
+     * Actualiza un usuario. Solo algunas cosas
+     * @param id id del usuario a actualizar
+     * @param user usuario con los datos a actualizar
+     */
+    private suspend fun upgrade(id: Int, user: User) {
+        println("PATCH /users/id -> upgrade")
+        val response = restClient.update(id, user)
+        if (response.isSuccessful) {
+            println("User upgraded: ")
+            println("User: ${response.body()}")
+        } else {
+            println("Error: ${response.code()}")
+        }
+    }
+
 }

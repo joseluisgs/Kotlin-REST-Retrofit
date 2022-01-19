@@ -18,12 +18,21 @@ data class GetByIdDTO(
 )
 
 data class CreateDTO(
-    val id: Int = 0,
+    var id: Int? = 0,
     var first_name: String,
     var last_name: String,
     var avatar: String?,
     var email: String?,
     var createdAt: Date?
+)
+
+data class UpdateDTO(
+    var id: Int? = 0,
+    var first_name: String,
+    var last_name: String,
+    var avatar: String?,
+    var email: String?,
+    var updatedAt: Date? = null
 )
 
 
