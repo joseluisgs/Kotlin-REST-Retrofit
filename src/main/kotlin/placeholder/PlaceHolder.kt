@@ -11,9 +11,10 @@ import placeholder.rest.PlaceHolderClient
 
 
 object PlaceHolder {
-    val restClient = PlaceHolderClient.getInstance()
+    private val restClient = PlaceHolderClient.getInstance()
 
     // Al hacerlo run blocking todo termina cuando todas las funciones suspendidas terminen
+    // coroutineScope permite ejecutar una serie de funciones suspendidas
     fun run() = runBlocking {
         println("API REST PlaceHolder - https://jsonplaceholder.typicode.com/")
         println("Resources: Users")
@@ -65,6 +66,7 @@ object PlaceHolder {
 
     /**
      * Obtiene un usuario por su id
+     * @param id id del usuario
      */
     private suspend fun getById(id: Int = 5) {
         println("GET /users/id -> getById")
@@ -79,6 +81,7 @@ object PlaceHolder {
 
     /**
      * Crea un nuevo usuario
+     * @param user usuario a crear
      */
     private suspend fun create(user: User) {
         println("POST /users -> create")
@@ -92,7 +95,9 @@ object PlaceHolder {
     }
 
     /**
-     * Actualiza un usuario. Todo
+     * Actualiza un usuario.
+     * @param id id del usuario a actualizar
+     * @param user usuario con los datos a actualizar
      */
     private suspend fun update(id: Int, user: User) {
         println("PUT /users/id -> update")
@@ -107,6 +112,8 @@ object PlaceHolder {
 
     /**
      * Actualiza un usuario. Solo algunas cosas
+     * @param id id del usuario a actualizar
+     * @param user usuario con los datos a actualizar
      */
     private suspend fun upgrade(id: Int, user: User) {
         println("PATCH /users/id -> upgrade")
@@ -121,6 +128,7 @@ object PlaceHolder {
 
     /**
      * Borra un usuario
+     * @param id id del usuario a borrar
      */
     private suspend fun delete(id: Int) {
         println("DELETE /users/id -> delete")

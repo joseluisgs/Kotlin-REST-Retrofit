@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Cliente de nuestra API REST
  */
 object ReqresClient {
-    private const val API_URL = "https://reqres.in/api/"
+    private const val API_URL = "https://reqres.in/"
 
     // Creamos una instancia de Retrofit con las llamadas a la API
     fun getInstance(): ReqresRest {
