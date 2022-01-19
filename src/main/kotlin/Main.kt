@@ -1,4 +1,5 @@
 import kotlinx.coroutines.runBlocking
+import placeholder.PlaceHolder
 import reqres.Reqres
 import kotlin.system.exitProcess
 
@@ -6,7 +7,7 @@ import kotlin.system.exitProcess
 fun main(): Unit = runBlocking {
     println("HOLA API REST con Kotlin y Retrofit2")
     // PlaceHolder
-    // PlaceHolder.run()
+    PlaceHolder.run()
     // Reqres
     Reqres.run()
     println("Fin del programa")

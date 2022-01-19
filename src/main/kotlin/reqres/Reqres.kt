@@ -29,6 +29,7 @@ object Reqres {
         val update = launch(Dispatchers.IO) { update(2, user) }
         user.email = "pepe@mmail.com"
         val upgrade = launch(Dispatchers.IO) { upgrade(4, user) }
+        val delete = launch(Dispatchers.IO) { delete(4) }
     }
 
     /**
@@ -110,6 +111,21 @@ object Reqres {
         if (response.isSuccessful) {
             println("User upgraded: ")
             println("User: ${response.body()}")
+        } else {
+            println("Error: ${response.code()}")
+        }
+    }
+
+    /**
+     * Borra un usuario
+     * @param id id del usuario a borrar
+     */
+    private suspend fun delete(id: Int) {
+        println("DELETE /users/id -> delete")
+        val response = restClient.delete(id)
+        if (response.isSuccessful) {
+            println("User deleted: ")
+            println("User: ${response.body()}") // No va a salir nada!!!
         } else {
             println("Error: ${response.code()}")
         }

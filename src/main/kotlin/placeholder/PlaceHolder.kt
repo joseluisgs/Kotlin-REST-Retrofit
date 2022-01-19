@@ -44,6 +44,7 @@ object PlaceHolder {
         put.await()
         patch.await()
         var delete = async(Dispatchers.IO) { delete(3) }
+        delete.await()
 
     }
 

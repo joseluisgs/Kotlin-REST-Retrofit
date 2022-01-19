@@ -26,4 +26,7 @@ interface ReqresRest {
     @PATCH("api/users/{id}")
     suspend fun upgrade(@Path("id") id: Int, @Body user: User): Response<UpdateDTO>
 
+    @DELETE("api/users/{id}")
+    suspend fun delete(@Path("id") id: Int): Response<Void> // Es void porque no devuelve nada
+
 }
