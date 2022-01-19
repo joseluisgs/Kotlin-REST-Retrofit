@@ -9,38 +9,40 @@ import placeholder.model.Geo
 import placeholder.model.User
 import placeholder.rest.PlaceHolderClient
 
+
 object PlaceHolder {
     val restClient = PlaceHolderClient.getInstance()
 
     // Al hacerlo run blocking todo termina cuando todas las funciones suspendidas terminen
     fun run() = runBlocking {
-        println("API REST PlaceHolder - Users")
-        println("-------------------------------------")
+        println("API REST PlaceHolder - https://jsonplaceholder.typicode.com/")
+        println("Resources: Users")
+        println("------------------------------------------------------")
         // Lanzo todo en contexto asíncrono y espero a que terminen y en un Dispacher de IO.
         //  Ahora mismo sería asíncrono
         // Y podría lanzar mil cosas de esta manera a la vez
         // Por eso algunas se resolverían antes que otras
-        val getAll = async(Dispatchers.Default) { getAll() }
+        val getAll = async(Dispatchers.IO) { getAll() }
         // Vamos a esperar a que terminen los get para hacer el resto de la ejecución
         // getAll.await() // Si no quieres que se vea mezclado, es asñincrono descomenta esto y comenta la siguiente getAll.await()
-        val getById = async(Dispatchers.Default) { getById(3) }
+        val getById = async(Dispatchers.IO) { getById(3) }
         getAll.await()
         getById.await()
         // Vamos con el POST
         val user = User("Juan", "Perez", "juan@email.com")
-        val post = async(Dispatchers.Default) { create(user) }
+        val post = async(Dispatchers.IO) { create(user) }
         // No vamos a actualizar, si modificamos antes, jejeje, aunque no pasa nada, porque el id es otro
         post.await()
         // -Otra vez en paralelo, quien ganara?
         user.name = "Juanito"
         user.address = Address("Calle falsa 123", "Madrid", "Madrid", "España", Geo(40.4, -3.2))
         user.company = Company("Company", "otra", "mas datos")
-        val put = async(Dispatchers.Default) { update(3, user) }
+        val put = async(Dispatchers.IO) { update(3, user) }
         user.name = "Eva"
-        val patch = async(Dispatchers.Default) { upgrade(3, user) }
+        val patch = async(Dispatchers.IO) { upgrade(3, user) }
         put.await()
         patch.await()
-        var delete = async(Dispatchers.Default) { delete(3) }
+        var delete = async(Dispatchers.IO) { delete(3) }
 
     }
 

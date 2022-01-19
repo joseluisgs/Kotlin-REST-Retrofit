@@ -1,5 +1,5 @@
 # Kotlin REST Retrofit
-Sencillo cliente para consumir una API REST con Retrofit usando Kotlin
+Sencillo cliente para consumir una API REST con Retrofit usando Kotlin. Para ello se consumen servicios REST de una API de prueba.
 
 [![Kotlin](https://img.shields.io/badge/Code-Kotlin-blueviolet)](https://kotlinlang.org/)
 [![LISENCE](https://img.shields.io/badge/Lisence-MIT-green)]()
