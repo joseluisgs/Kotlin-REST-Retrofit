@@ -2,10 +2,7 @@ package placeholder.rest
 
 import placeholder.model.User
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 /**
  * Voy a usar funciones suspendidas, para poder usar código asíncrono. Si no quitar el suspend y cambiar Response<T>
@@ -22,5 +19,14 @@ interface PlaceHolderRest {
 
     @POST("/users")
     suspend fun create(@Body user: User): Response<User>
+
+    @PUT("/users/{id}")
+    suspend fun update(@Path("id") id: Int, @Body user: User): Response<User>
+
+    @PATCH("/users/{id}")
+    suspend fun upgrade(@Path("id") id: Int, @Body user: User): Response<User>
+
+    @DELETE("/users/{id}")
+    suspend fun delete(@Path("id") id: Int): Response<Void> // Es void porque no devuelve nada
 
 }

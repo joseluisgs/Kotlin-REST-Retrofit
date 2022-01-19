@@ -3,6 +3,9 @@ package placeholder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import placeholder.model.Address
+import placeholder.model.Company
+import placeholder.model.Geo
 import placeholder.model.User
 import placeholder.rest.PlaceHolderClient
 
@@ -17,17 +20,28 @@ object PlaceHolder {
         //  Ahora mismo sería asíncrono
         // Y podría lanzar mil cosas de esta manera a la vez
         // Por eso algunas se resolverían antes que otras
-        var getAll = async(Dispatchers.Default) { getAll() }
+        val getAll = async(Dispatchers.Default) { getAll() }
         // Vamos a esperar a que terminen los get para hacer el resto de la ejecución
         // getAll.await() // Si no quieres que se vea mezclado, es asñincrono descomenta esto y comenta la siguiente getAll.await()
-        var getById = async(Dispatchers.Default) { getById(3) }
+        val getById = async(Dispatchers.Default) { getById(3) }
         getAll.await()
         getById.await()
         // Vamos con el POST
-        var user = User("Juan", "Perez", "juan@email.com")
-        var post = async(Dispatchers.Default) { create(user) }
+        val user = User("Juan", "Perez", "juan@email.com")
+        val post = async(Dispatchers.Default) { create(user) }
         // No vamos a actualizar, si modificamos antes, jejeje, aunque no pasa nada, porque el id es otro
         post.await()
+        // -Otra vez en paralelo, quien ganara?
+        user.name = "Juanito"
+        user.address = Address("Calle falsa 123", "Madrid", "Madrid", "España", Geo(40.4, -3.2))
+        user.company = Company("Company", "otra", "mas datos")
+        val put = async(Dispatchers.Default) { update(3, user) }
+        user.name = "Eva"
+        val patch = async(Dispatchers.Default) { upgrade(3, user) }
+        put.await()
+        patch.await()
+        var delete = async(Dispatchers.Default) { delete(3) }
+
     }
 
     /**
@@ -62,7 +76,7 @@ object PlaceHolder {
     }
 
     /**
-     * Obtiene un usuario por su id
+     * Crea un nuevo usuario
      */
     private suspend fun create(user: User) {
         println("POST /users -> create")
@@ -75,4 +89,45 @@ object PlaceHolder {
         }
     }
 
+    /**
+     * Actualiza un usuario. Todo
+     */
+    private suspend fun update(id: Int, user: User) {
+        println("PUT /users/id -> update")
+        val response = restClient.update(id, user)
+        if (response.isSuccessful) {
+            println("User updated: ")
+            println("User: ${response.body()?.toJSON()}")
+        } else {
+            println("Error: ${response.code()}")
+        }
+    }
+
+    /**
+     * Actualiza un usuario. Solo algunas cosas
+     */
+    private suspend fun upgrade(id: Int, user: User) {
+        println("PATCH /users/id -> upgrade")
+        val response = restClient.update(id, user)
+        if (response.isSuccessful) {
+            println("User upgraded: ")
+            println("User: ${response.body()?.toJSON()}")
+        } else {
+            println("Error: ${response.code()}")
+        }
+    }
+
+    /**
+     * Borra un usuario
+     */
+    private suspend fun delete(id: Int) {
+        println("DELETE /users/id -> delete")
+        val response = restClient.delete(id)
+        if (response.isSuccessful) {
+            println("User deleted: ")
+            println("User: ${response.body()}") // No va a salir nada!!!
+        } else {
+            println("Error: ${response.code()}")
+        }
+    }
 }
