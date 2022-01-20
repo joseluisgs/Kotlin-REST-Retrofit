@@ -16,6 +16,8 @@ object PlaceHolder {
     // Al hacerlo run blocking todo termina cuando todas las funciones suspendidas terminen
     // coroutineScope permite ejecutar una serie de funciones suspendidas
     fun run() = runBlocking {
+        println()
+        println("------------------------------------------------------")
         println("API REST PlaceHolder - https://jsonplaceholder.typicode.com/")
         println("Resources: Users")
         println("------------------------------------------------------")

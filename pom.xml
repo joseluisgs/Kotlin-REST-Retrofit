@@ -105,6 +105,13 @@
             <version>1.6.0</version>
             <type>pom</type>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.diogonunes/JColor -->
+        <dependency>
+            <groupId>com.diogonunes</groupId>
+            <artifactId>JColor</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+
 
     </dependencies>
 

@@ -2,6 +2,7 @@ package reqres
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import reqres.model.User
 import reqres.rest.ReqresClient
@@ -10,6 +11,8 @@ object Reqres {
     private val restClient = ReqresClient.getInstance()
 
     suspend fun run() = coroutineScope {
+        println()
+        println("------------------------------------------------------")
         println("API REST Reqres.in - https://reqres.in/")
         println("Resources: Users")
         println("------------------------------------------------------")
@@ -30,6 +33,20 @@ object Reqres {
         user.email = "pepe@mmail.com"
         val upgrade = launch(Dispatchers.IO) { upgrade(4, user) }
         val delete = launch(Dispatchers.IO) { delete(4) }
+        create.join()
+        update.join()
+        upgrade.join()
+        delete.join()
+
+        // Si lo hacemos con flujos podemos jugar con operaciones
+        // https://kotlinlang.org/docs/flow.html#flow-context
+        // Los flujos son asíncronos, por lo que no necesitamos hacer nada de corritinas, es
+        val flowAll = getAllFlow().collect { println(it?.toJSON()) }
+        val flowAllSimple = getAllFlowSimple()
+            .filter { it?.first_name?.contains("a") == true }
+            .take(3)
+            .collect { println(it?.toJSON()) }
+        val flowById = getByIdFlow(3).collect { println(it?.toJSON()) }
     }
 
     /**
@@ -129,6 +146,46 @@ object Reqres {
         } else {
             println("Error: ${response.code()}")
         }
+    }
+
+    /**
+     * Voy a hacerlo con un flujo de datos
+     */
+    suspend fun getAllFlow(): Flow<User?> {
+        println("GET /users -> getAll as Flow")
+
+        return flow {
+            // get the comment Data from the api
+            val response = restClient.getAll(1, 10)
+            if (response.isSuccessful) {
+                val data = response.body()?.data
+                data?.forEach {
+                    emit(it)
+                }
+            } else {
+                emit(null)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    /**
+     * Voy a hacerlo con un flujo de datos simplificado
+     */
+    suspend fun getAllFlowSimple(): Flow<User?> {
+        println("GET /users -> getAll as Flow Simple")
+        return restClient.getAll(1, 10).body()?.data?.asFlow() ?: flowOf(null).flowOn(Dispatchers.IO)
+    }
+
+    private suspend fun getByIdFlow(id: Int = 5): Flow<User?> {
+        println("GET /users/id -> getById Flow")
+        return flow {
+            val response = restClient.getById(id)
+            if (response.isSuccessful) {
+                emit(response.body()?.data)
+            } else {
+                emit(null)
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
 }
