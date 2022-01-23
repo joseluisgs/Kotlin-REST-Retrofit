@@ -1,5 +1,6 @@
 package placeholder
 
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -59,9 +60,7 @@ object PlaceHolder {
         if (response.isSuccessful) {
             println("Total users: ${response.body()?.size}")
             // Si el body no es nulo ? imprimo
-            response.body()?.forEach {
-                println("User: ${it.toJSON()}")
-            }
+            println(response.body().toJSON())
         } else {
             println("Error: ${response.code()}")
         }
@@ -144,3 +143,7 @@ object PlaceHolder {
         }
     }
 }
+
+// Me creo funciones de extensión para poder usar el Gson. Lo ideal sería mapear el modelo, usando los resultados para
+private fun Any?.toJSON() = GsonBuilder().setPrettyPrinting().create().toJson(this)
+

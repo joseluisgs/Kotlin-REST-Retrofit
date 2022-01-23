@@ -1,5 +1,6 @@
 package reqres.rest
 
+import reqres.dto.LoginDTO
 import reqres.model.*
 import retrofit2.Response
 import retrofit2.http.*
@@ -29,4 +30,13 @@ interface ReqresRest {
     @DELETE("api/users/{id}")
     suspend fun delete(@Path("id") id: Int): Response<Void> // Es void porque no devuelve nada
 
+    @POST("api/login")
+    suspend fun login(@Body user: LoginDTO): Response<TokenDTO>
+
+    @GET("api/users")
+    suspend fun getAllWithToken(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int = 0,
+        @Query("per_page") perPage: Int = 0
+    ): Response<GetAllDTO>
 }

@@ -41,3 +41,8 @@ data class Support(
     var text: String?
 )
 
+data class TokenDTO(
+    var token: String? = null
+)
+
+
